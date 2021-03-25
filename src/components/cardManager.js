@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import { v4 as uuid } from 'uuid';
 import {
     makeStyles,
     Dialog,
@@ -13,6 +14,7 @@ import {
     Fab,
 } from "@material-ui/core";
 import Card from './card'
+import { addCard } from "../store/actions";
 
 const useStyles = makeStyles((theme) => ({
     fab: {
@@ -22,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const CardManager = ({cards}) => {
+const CardManager = ({cards, addCard}) => {
     const [showNew,setShowNew] = useState(false);
 
     const classes = useStyles();
@@ -39,18 +41,18 @@ const CardManager = ({cards}) => {
             <DialogContent>
                 <FormControl>
                     <TextField
-                        id="addCardName"
+                        id="addName"
                         autoFocus
                         label="Título"
                     />
                     <TextField
-                        id="addCardDescription"
+                        id="addDescription"
                         label="Descripción"
                         multiline
                         rows={4}
                     />
                     <TextField
-                        id="addCardImg"
+                        id="addImg"
                         label="Imagen (Url)"
                     />
                 </FormControl>
@@ -59,7 +61,12 @@ const CardManager = ({cards}) => {
                 <Button
                     id="addButtonAdd"
                     onClick={() => {
-                        //TODO addCategory();
+                        addCard({
+                            id: uuid(),
+                            title: document.getElementById('addName').value,
+                            description: document.getElementById('addDescription').value,
+                            img: document.getElementById('addImg').value,
+                        });
                         setShowNew(false)}
                     }>
                     Añadir
@@ -97,4 +104,8 @@ const mapStateToProps = state => {
     }
 };
 
-export default connect(mapStateToProps, null)(CardManager);
+const mapDispatchToProps = {
+    addCard,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CardManager);

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import {
     makeStyles,
     Dialog,
@@ -15,6 +16,10 @@ import {
     Grid,
     Card as MaterialCard,
 } from "@material-ui/core";
+import {
+    editCard,
+    deleteCard,
+} from "../store/actions";
 import { defaultImg } from "../utils/config";
 
 const useStyles = makeStyles(() => ({
@@ -24,13 +29,17 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-const Card = ({card}) => {
+const Card = ({card, editCard, deleteCard}) => {
     const [showEdit,setShowEdit] = useState(false);
     const [showDelete,setShowDelete] = useState(false);
     const [showButtons, setShowButtons] = useState(false);
-    const [title,setTitle] = useState(card.title);
-    const [description,setDescription] = useState(card.description);
-    const [img,setImg] = useState(card.img);
+
+    const {
+        id,
+        title,
+        description,
+        img,
+    } = card;
 
     const classes = useStyles();
 
@@ -46,25 +55,22 @@ const Card = ({card}) => {
             <DialogContent>
                 <FormControl>
                     <TextField
-                        id="addCardName"
+                        id="editName"
                         autoFocus
                         label="Título"
-                        value={title}
-                        onClick={e=>setTitle(e.target.value)}
+                        defaultValue={title}
                     />
                     <TextField
-                        id="addCardDescription"
+                        id="editDescription"
                         label="Descripción"
                         multiline
                         rows={4}
-                        value={description}
-                        onClick={e=>setDescription(e.target.value)}
+                        defaultValue={description}
                     />
                     <TextField
-                        id="addCardImg"
+                        id="editImg"
                         label="Imagen (Url)"
-                        value={img}
-                        onClick={e=>setImg(e.target.value)}
+                        defaultValue={img}
                     />
                 </FormControl>
             </DialogContent>
@@ -72,7 +78,12 @@ const Card = ({card}) => {
                 <Button
                     id="editButtonEdit"
                     onClick={() => {
-                        //addCategory();
+                        editCard({
+                            id,
+                            title: document.getElementById('editName').value,
+                            description: document.getElementById('editDescription').value,
+                            img: document.getElementById('editImg').value,
+                        });
                         setShowEdit(false)}
                     }>
                     Actualizar
@@ -105,7 +116,7 @@ const Card = ({card}) => {
                 <Button
                     id="deleteButtonDelete"
                     onClick={() => {
-                        //deleteCategory();
+                        deleteCard(id);
                         setShowDelete(false)}
                     }>
                     Eliminar
@@ -175,4 +186,9 @@ const Card = ({card}) => {
     )
 }
 
-export default Card;
+const mapDispatchToProps = {
+    editCard,
+    deleteCard,
+};
+
+export default connect(null, mapDispatchToProps)(Card);
