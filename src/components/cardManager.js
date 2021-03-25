@@ -14,7 +14,10 @@ import {
     Fab,
 } from "@material-ui/core";
 import Card from './card'
-import { addCard } from "../store/actions";
+import {
+    addCard,
+    setSort,
+} from "../store/actions";
 
 const useStyles = makeStyles((theme) => ({
     fab: {
@@ -24,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const CardManager = ({cards, addCard}) => {
+const CardManager = ({cards, sort, setSort, addCard}) => {
     const [showNew,setShowNew] = useState(false);
 
     const classes = useStyles();
@@ -84,28 +87,47 @@ const CardManager = ({cards, addCard}) => {
     );
 
     return (
-        <Grid container spacing={3}>
-            {addDialog}
-            {cards.map((card, index) => <Card key={`card-${index}`} card={card} />)}
-            <Fab
-                className={classes.fab}
-                color="primary"
-                onClick={()=>setShowNew(true)}
+        <>
+            <Button
+                onClick={()=>{
+                    sort===0
+                        ? setSort('1')
+                        : sort>0
+                            ? setSort('-1')
+                            : setSort('0')
+                }}
             >
-                +
-            </Fab>
-        </Grid>
+                {sort===0 ? "Título ↑↓" : sort>0 ? "Título ↑" : "Título ↓"}
+            </Button>
+            <Grid container spacing={3}>
+                {addDialog}
+
+                {cards.map((card, index) => <Card key={`card-${index}`} card={card} />)}
+                <Fab
+                    className={classes.fab}
+                    color="primary"
+                    onClick={()=>setShowNew(true)}
+                >
+                    +
+                </Fab>
+            </Grid>
+        </>
     )
 }
 
 const mapStateToProps = state => {
+    const order = parseInt(state.sort);
     return {
-        cards: state.cards,
+        cards: order === 0
+            ? state.cards.sort((a,b) => { return a.id>b.id ? 1 : -1 })
+            : state.cards.sort((a,b) => { return a.title>b.title ? order : -order }),
+        sort: order,
     }
 };
 
 const mapDispatchToProps = {
     addCard,
+    setSort,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CardManager);

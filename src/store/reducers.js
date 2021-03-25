@@ -5,6 +5,7 @@ export default function reducer (state = loadState(), action) {
         case 'ADD_CARD': {
             return {
                 cards: [...state.cards, action.data],
+                sort: state.sort,
             }
         }
         case 'EDIT_CARD': {
@@ -16,11 +17,19 @@ export default function reducer (state = loadState(), action) {
 
             return {
                 cards: newCards,
+                sort: state.sort,
             }
         }
         case 'DELETE_CARD': {
             return {
                 cards: [...state.cards].filter(c=>c.id !== action.data),
+                sort: state.sort,
+            }
+        }
+        case 'SET_SORT': {
+            return {
+                cards: state.cards,
+                sort: action.data,
             }
         }
         default:

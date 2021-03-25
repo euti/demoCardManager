@@ -18,3 +18,11 @@ export function deleteCard(id) {
         data: id,
     }
 }
+
+export function setSort(newState) {
+    return {
+        type: 'SET_SORT',
+        data: newState,
+    }
+}
+
