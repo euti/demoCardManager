@@ -27,6 +27,10 @@ const useStyles = makeStyles(() => ({
         'width': '200px',
         'height': '200px',
     },
+    img: {
+        maxWidth: '100px',
+        maxHeight: '100px',
+    }
 }));
 
 const Card = ({card, editCard, deleteCard}) => {
@@ -153,7 +157,10 @@ const Card = ({card, editCard, deleteCard}) => {
 
     const content = (
         <CardActionArea>
-            <img src={img || defaultImg} alt="card img" />
+            <img
+                className={classes.img}
+                src={img || defaultImg}
+                alt="card img" />
             <CardContent>
                 <Typography gutterBottom variant="h5" component="h2">
                     {title}
