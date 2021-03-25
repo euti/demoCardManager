@@ -1,6 +1,6 @@
-import defaultState from '../utils/mockData';
+import { loadState } from '../utils/localStorage';
 
-export default function reducer (state = defaultState(), action) {
+export default function reducer (state = loadState(), action) {
     switch (action.type) {
         case 'ADD_CARD': {
             return {
