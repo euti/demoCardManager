@@ -29,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
 
 const CardManager = ({cards, sort, setSort, addCard}) => {
     const [showNew,setShowNew] = useState(false);
+    const [error,setError] = useState([true, true]);
 
     const classes = useStyles();
 
@@ -46,13 +47,29 @@ const CardManager = ({cards, sort, setSort, addCard}) => {
                     <TextField
                         id="addName"
                         autoFocus
+                        error={error[0]}
                         label="Título"
+                        helperText={'Campo obligatorio'}
+                        onChange={(e)=>{
+                            console.log(e.target.value.length)
+                            return e.target.value.length==0
+                                ? setError([true,error[1]])
+                                : setError([false,error[1]])
+                        }}
                     />
                     <TextField
                         id="addDescription"
                         label="Descripción"
+                        error={error[1]}
                         multiline
                         rows={4}
+                        helperText={'Campo obligatorio'}
+                        onChange={(e)=>{
+                            console.log(e.target.value.length)
+                            return e.target.value.length==0
+                                ? setError([error[0], true])
+                                : setError([error[0], false])
+                        }}
                     />
                     <TextField
                         id="addImg"
@@ -70,8 +87,10 @@ const CardManager = ({cards, sort, setSort, addCard}) => {
                             description: document.getElementById('addDescription').value,
                             img: document.getElementById('addImg').value,
                         });
-                        setShowNew(false)}
-                    }>
+                        setShowNew(false)
+                    }}
+                    disabled={error[0] || error[1]}
+                    >
                     Añadir
                 </Button>
                 <Button

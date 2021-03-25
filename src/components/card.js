@@ -37,6 +37,7 @@ const Card = ({card, editCard, deleteCard}) => {
     const [showEdit,setShowEdit] = useState(false);
     const [showDelete,setShowDelete] = useState(false);
     const [showButtons, setShowButtons] = useState(false);
+    const [error,setError] = useState([false, false]);
 
     const {
         id,
@@ -61,15 +62,31 @@ const Card = ({card, editCard, deleteCard}) => {
                     <TextField
                         id="editName"
                         autoFocus
+                        error={error[0]}
                         label="Título"
                         defaultValue={title}
+                        helperText={'Campo obligatorio'}
+                        onChange={(e)=>{
+                            console.log(e.target.value.length)
+                            return e.target.value.length==0
+                                ? setError([true,error[1]])
+                                : setError([false,error[1]])
+                        }}
                     />
                     <TextField
                         id="editDescription"
+                        error={error[1]}
                         label="Descripción"
                         multiline
                         rows={4}
                         defaultValue={description}
+                        helperText={'Campo obligatorio'}
+                        onChange={(e)=>{
+                            console.log(e.target.value.length)
+                            return e.target.value.length==0
+                                ? setError([error[0], true])
+                                : setError([error[0], false])
+                        }}
                     />
                     <TextField
                         id="editImg"
@@ -89,7 +106,9 @@ const Card = ({card, editCard, deleteCard}) => {
                             img: document.getElementById('editImg').value,
                         });
                         setShowEdit(false)}
-                    }>
+                    }
+                    disabled={error[0] || error[1]}
+                >
                     Actualizar
                 </Button>
                 <Button
